@@ -79,6 +79,9 @@ class QuizAttempt(models.Model):
     score = models.DecimalField(max_digits=5, decimal_places=2, null=False)
     attempted_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self) -> str:
+        return f"{self.quiz.title} | {self.user.username} | {float(self.score)}"
+
 
 
 
