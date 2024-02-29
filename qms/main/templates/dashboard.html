@@ -1,0 +1,98 @@
+{% load static %}
+{% load custom_filters %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QMS Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container-fluid bg-light">
+        <div class="row mt-3">
+            <div class="col-md-3">
+                <!-- Sidebar -->
+                <div class="bg-light p-3">
+                    <h3 class="text-center bg-primary">QMS Dashboard</h3>
+                    <ul class="list-group mt-3">
+                        <li class="list-group-item"><a href="#">Dashboard</a></li>
+                        <li class="list-group-item"><a href="#">Overall Score</a></li>
+                        <li class="list-group-item"><a href="#">Questions Attempted</a></li>
+                        <li class="list-group-item"><a href="#">Quiz Attempts</a></li>
+                        <li class="list-group-item"><a href="{% url "main:home" %}">Home</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <!-- Main Content Area -->
+                <div class="p-3">
+                    <h2>Welcome, {{user.username}}</h2>
+                    <!-- Display any relevant data or statistics here -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">{{user.username}}'s progress</h4>
+                                    <h6 class="card-text text-muted">This is the overall progress till now - up-to-date</h6>
+                                    <h5>Best attempt | {{best.quiz.title}} | {{best.score}} | {{best.attempted_at|timesince}} ago</h5>
+                                    <h5>Average score - {{average_score}}</h5>
+                                    <h5>Total score - {{total_score}} out of {{total}}</h5>
+                                    <h5>Your performance - {{total_score|percentage:total}} </h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Total Quiz Attempts - {{ attempts.count }}</h5>
+                                    <h5 class="card-text text-muted">Attempts made by the user</h5>
+                                    <p class="card-text">Most recent attempt: {{ recent_attempt }}</p>
+                                    <a class="btn btn-success btn-sm " href="{% url "main:best_attempt" quiz_id=4 %}" role="button">View the best attempt</a>
+                                    <table class="table table-striped table-hover">
+                                      <thead>
+                                        <tr>
+                                          <th scope="col">S.No</th>
+                                          <th scope="col">Quiz</th>
+                                          <th scope="col">Score</th>
+                                          <th scope="col">Date</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {% for attempt in attempts %}
+                                        <tr>
+                                          <th scope="row">{{ forloop.counter }}</th>
+                                          <td>{{ attempt.quiz.title }}</td>
+                                          <td>{{ attempt.score }}</td>
+                                          <td>{{ attempt.attempted_at | date}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                      </tbody>
+                                    </table>    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 py-3">
+                            <div class="card">
+                              <div class="card-body">
+                                <h5>User's Performance</h5><br/>
+                                <h6 class="card-subtitle mb-2 text-muted">Graphical Representations  of User's Performance over Time.</h6>
+                                <canvas id="quizBehaviorChart" width="800" height="400"></canvas>
+                                <script src="{% static "quizBehavior.js" %}"></script>
+                              </div>
+                            </div>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Custom Scripts -->
+    <!-- Add your custom scripts here -->
+</body>
+</html>

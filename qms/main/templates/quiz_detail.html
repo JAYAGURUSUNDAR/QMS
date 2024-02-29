@@ -1,0 +1,33 @@
+{% extends 'home.html' %}
+{% load static %}
+{% block title %}
+{{quiz.title}} | {{quiz.category}}
+{% endblock title%}
+
+{% block content %}
+<div id="details">
+    <input type="hidden" value="{{quiz.pk}}" name="quiz_id" id="quiz_id">
+    <h1>{{quiz.title}}</h1>
+    <p>{{quiz.description}}</p>
+    <h4>category:{{quiz.category}}</h4>
+    <h4>Author:{{quiz.created_by}}</h4>
+    <button onclick="attempt_btn_click()" type="button" id="attempt_btn">Attempt this quiz</button>
+    <div id="questions">
+        {% csrf_token %}
+        {% for question in questions %}
+        <div id="{{question.pk}}" class="question_{{question.pk}}">
+            <p><strong>{{question.question_text}}</strong></p>
+            {% for choice in question.choice_set.all %}
+            <input type="radio" id="choice_{{choice.pk}}" value="{{choice.pk}}" disabled>
+            <label for="choice_{{choice.pk}}" id="label_{{choice.pk}}">{{choice.choice_text}}</label>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+    <button type="button" onclick="submit_btn()" id="submit_btn">submit</button>
+</div>
+{% endblock content %}
+
+{% block script %}
+<script src="{% static 'quiz_detail.js' %}"></script>
+{% endblock script %}

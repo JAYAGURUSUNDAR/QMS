@@ -1,0 +1,25 @@
+#content {
+    height: 100%;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: space-around;
+    justify-content: left;
+    padding: 25px;
+
+}
+#content h1 {
+    text-align: left;
+}
+#content a{
+    width: 100%;
+    text-decoration: none;
+    border: 3px solid black;
+    border-radius: 5px;
+    box-shadow: 3px 3px;
+    font-size: larger;
+}
+#content a:hover {
+    border: 3px solid black;
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %} Welcome Page {% endblock title %}</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'home.css' %}">
+  <link rel="stylesheet" type="text/css" href="{%static 'create_quiz.css'%}">
+  <link rel="stylesheet" type="text/css" href="{%static 'quizzes.css'%}">
+  <link rel="stylesheet" type="text/css" href="{%static 'quiz_detail.css'%}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="navigation">
+                <li><a href="{% url 'main:home'%}" aria-current="page">Home</a></li>
+                <li><a href="{% url 'main:quizzes_list'%}" aria-current="page">Quizzes</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="{% url "main:dashboard" %}" aria-current="page">Dashboard</a></li>
+                <li><a href="#" aria-current="page">Profile</a></li>
+                <li><a href="#" aria-current="page">Attempt a quiz</a></li>
+                <li><a href="{% url 'main:create_quiz'%}" aria-current="page">Create a quiz</a></li>
+                {% endif %}
+                <li><a href="#" aria-current="page">View categories</a></li>
+                <li><a href="#" aria-current="page">About us</a></li>
+            </ul>
+        </nav>
+    </header>
+    {%block content%}
+    <div class="start-content" onmouseenter="on_click()" title="Click to see more">
+        <h1>Welcome to Quiz Management System</h1>
+        <p>Create and Asses the quiz through web</p>
+    </div>
+    <div id="sub-content">
+    </div>
+    {% endblock content %}
+    <footer>
+        <h4>&copy;2024. QMS. All rights reserved.</h4>
+    </footer>
+    {%block script%}
+    <script src="{% static 'home.js'%}"></script>
+    {%endblock script%}
+</body>
+</html>
