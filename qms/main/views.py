@@ -19,15 +19,23 @@ class SubmitQuiz(views.APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request:HttpRequest):
         data:dict = JSONParser().parse(request)
-        print(data, User.objects.get(username=request.user).is_superuser)
+        questions:dict = data["questions"]
+        quiz_atmpt =  QuizAttempt()
         if data:
+            score = 0
             correct_answers=0
             try:
-                for question, answer in data.items():
+                for question, answer in questions.items():
                     if self.validate_answers(int(question), int(answer)):
                         correct_answers+=1
+                        score+=Question.objects.get(id=int(question)).score
             except Exception as e:print(e)
-            finally:return views.Response(
+            finally:
+                quiz_atmpt.user = request.user
+                quiz_atmpt.quiz = Quiz.objects.get(id=data['quiz'])
+                quiz_atmpt.score = score
+                quiz_atmpt.save()
+                return views.Response(
                 {
                     'message': 'Quiz submitted successfully', 
                     'correct_answers':correct_answers
@@ -39,7 +47,13 @@ class SubmitQuiz(views.APIView):
     def validate_answers(self, question:int, answer:int):
         return True if Choice.objects.get(question=question, pk=answer).is_correct else False
 
-
+class GetUserProgress(LoginRequiredMixin, views.APIView):
+    def get(self, request:HttpRequest):
+        user:User = User.objects.get(username=request.user)
+        questions_attended:int =  len([q for q in Quiz.objects.filter(user=user)])
+        total_questions:int = Quiz.objects.count()
+        progress:float = (questions_attended / total_questions)*100
+        return views.Response({'progress':round(progress, 2)}, status=status.HTTP_200_OK)
 
 class QuizList(generics.ListAPIView):
     queryset = Quiz.objects.all()
