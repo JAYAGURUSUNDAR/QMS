@@ -8,11 +8,11 @@ body {
     align-items: center;
     align-content: space-around;
     height: 98%;
-    background-color:beige;
+    background-color:maroon;
 }
 header {
     align-self: flex-start;
-    background-color: lightsalmon;
+    background-color:#ca0000;
     width: 100%;
 }
 .navigation {

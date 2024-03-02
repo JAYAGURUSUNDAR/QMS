@@ -47,13 +47,23 @@ class SubmitQuiz(views.APIView):
     def validate_answers(self, question:int, answer:int):
         return True if Choice.objects.get(question=question, pk=answer).is_correct else False
 
-class GetUserProgress(LoginRequiredMixin, views.APIView):
-    def get(self, request:HttpRequest):
-        user:User = User.objects.get(username=request.user)
-        questions_attended:int =  len([q for q in Quiz.objects.filter(user=user)])
-        total_questions:int = Quiz.objects.count()
-        progress:float = (questions_attended / total_questions)*100
-        return views.Response({'progress':round(progress, 2)}, status=status.HTTP_200_OK)
+class GetUserDetails(views.APIView):
+    def get(self, request:HttpRequest, pk:int):
+        try:
+            data = {}
+            data["username"] = User.objects.get(pk=pk).username
+            data["email"] = User.objects.get(pk=pk).email
+            data["quizzes_attended"] = Quiz.objects.filter(id__in=QuizAttempt.objects.filter(user=User.objects.get(pk=pk)).values("quiz_id")).count()
+            data["highest_score"] = QuizAttempt.objects.filter(user=User.objects.get(pk=pk)).order_by("-score").first().score
+            return views.Response(data=data, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return views.Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        finally:data=None
+
+    
+    
+        
 
 class QuizList(generics.ListAPIView):
     queryset = Quiz.objects.all()

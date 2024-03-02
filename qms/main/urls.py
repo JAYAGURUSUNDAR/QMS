@@ -1,11 +1,5 @@
 from django.urls import path
-from .views import (
-    HomePageView, QuizCreateView, 
-    QuizzesView, QuizDetailView, 
-    DashboardView, QuizList,
-    QuizDetail, QuestionDetail,
-    SubmitQuiz
-    )
+from .views import *
 app_name="main"
 urlpatterns = [
     path('', HomePageView.as_view(), name='home'),
@@ -18,4 +12,5 @@ urlpatterns = [
     path("api/quizzes/<int:pk>", QuizDetail.as_view()),
     path("api/quizzes/questions/<int:pk>", QuestionDetail.as_view()),
     path("api/quizzes/submit", SubmitQuiz.as_view()),
+    path("api/user/<int:pk>", GetUserDetails.as_view()),
 ]

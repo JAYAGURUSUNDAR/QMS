@@ -42,9 +42,9 @@ class Question(models.Model):
     score = models.PositiveSmallIntegerField(null=False, default=1)
 
     @staticmethod
-    def total_score():
+    def total_score(quiz:int):
         # Returns the sum of all scores in this table
-        qs = Question.objects.all()
+        qs = Question.objects.filter(quiz__id=quiz)
         return sum([q.score for q in qs])
 
     def __str__(self) -> str:
@@ -81,12 +81,3 @@ class QuizAttempt(models.Model):
 
     def __str__(self) -> str:
         return f"{self.quiz.title} | {self.user.username} | {float(self.score)}"
-
-
-
-
-
-
-
-
-
